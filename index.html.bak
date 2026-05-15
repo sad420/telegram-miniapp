@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ultra Pro Mini App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; text-align:center; padding:20px; }
+    button { margin:10px; padding:10px 20px; }
+  </style>
+</head>
+<body>
+
+<h2>🚀 Ultra Pro Mini App</h2>
+
+<p id="points">Points: 0</p>
+
+<button onclick="watchAd()">🎬 Watch Ad</button>
+<button onclick="invite()">👥 Invite Friend</button>
+<button onclick="withdraw()">💸 Withdraw</button>
+
+<script>
+let user_id = "user1";
+let api = "http://127.0.0.1:5000";
+
+async function loadUser(){
+  let res = await fetch(`${api}/user/${user_id}`);
+  let data = await res.json();
+  document.getElementById("points").innerText = "Points: " + data.points;
+}
+
+async function watchAd(){
+  await fetch(`${api}/add_points`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({user_id, amount: 50})
+  });
+  loadUser();
+}
+
+async function invite(){
+  await fetch(`${api}/invite`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({user_id})
+  });
+  loadUser();
+}
+
+async function withdraw(){
+  let amount = prompt("Enter amount:");
+  await fetch(`${api}/withdraw`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({user_id, amount: parseInt(amount)})
+  });
+  loadUser();
+}
+
+loadUser();
+</script>
+
+</body>
+</html>
